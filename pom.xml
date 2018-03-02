@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-	xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.quaddy-services.mule.maven</groupId>
 	<artifactId>mule-metrics-report</artifactId>
 	<version>2018.3.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>maven-plugin</packaging>
 
 	<description>plugin which creates a metrics report for mule applications</description>
 	<url>https://github.com/rscadrde/mule-metrics-report/blob/master/README.md</url>
@@ -25,5 +22,20 @@
 		<connection>scm:git:https://github.com/rscadrde/mule-metrics-report.git</connection>
 		<developerConnection>scm:git:https://github.com/rscadrde/mule-metrics-report.git</developerConnection>
 	</scm>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-plugin-api</artifactId>
+			<version>3.0</version>
+		</dependency>
 
- </project>
+    <!-- dependencies to annotations -->
+		<dependency>
+			<groupId>org.apache.maven.plugin-tools</groupId>
+			<artifactId>maven-plugin-annotations</artifactId>
+			<version>3.4</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+</project>
