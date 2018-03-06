@@ -120,7 +120,8 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 				}
 			});
 			for (SubFlow tempSubFlow : tempSubFlows) {
-				tempWriter.println(tempSubFlow.getName() + " <font size=1>in " + createRelativeLink(tempDir, tempSubFlow.getFile()) + "</font><br/>");
+				tempWriter.println(tempSubFlow.getName() + " <font size=1>in <a href=\"" + createRelativeLink(tempDir, tempSubFlow.getFile()) + "\">"
+						+ tempSubFlow.getFile().getName() + "</a></font><br/>");
 			}
 
 			tempWriter.println("<a name=\"UnusedFlows\"><h3>UnusedFlows</h3></a>");
@@ -131,7 +132,8 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 				}
 			});
 			for (AbstractFlow tempUnused : tempUnusedFlows) {
-				tempWriter.println(tempUnused.getName() + " <font size=1>in " + createRelativeLink(tempDir, tempUnused.getFile()) + "</font><br/>");
+				tempWriter.println(tempUnused.getName() + " <font size=1>in <a href=\"" + createRelativeLink(tempDir, tempUnused.getFile()) + "\">"
+						+ tempUnused.getFile().getName() + "</a></font><br/>");
 			}
 
 			tempWriter.println("<a name=\"SetVariables\"><h3>SetVariables</h3></a>");
