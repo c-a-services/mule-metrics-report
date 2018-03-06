@@ -24,7 +24,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import de.quaddy_services.mule.maven.model.AbstractFlow;
 import de.quaddy_services.mule.maven.model.Flow;
+import de.quaddy_services.mule.maven.model.FlowRef;
 import de.quaddy_services.mule.maven.model.SetVariable;
 import de.quaddy_services.mule.maven.model.SubFlow;
 
@@ -79,8 +81,16 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 			tempWriter.println("<li>" + tempSubFlows.size() + " <a href=\"#SubFlows\">sub-flows</a>. Average per file: "
 					+ aFoundElements.getAverageSubFlowsPerFile() + "</li>");
 			List<SetVariable> tempSetVariables = aFoundElements.getSetVariables();
+
+			List<AbstractFlow> tempUnusedFlows = aFoundElements.getUnusedFlows();
+			tempWriter.println("<li><a href=\"#UnusedFlows\">" + tempUnusedFlows.size() + " unused flows</a> </li>");
+
 			tempWriter.println("<li>" + tempSetVariables.size() + " <a href=\"#SetVariables\">set-variables</a> </li>");
+
+			tempWriter.println("<li><a href=\"call-hierarchy.html\">CallHierarchy</a> </li>");
+			printCallHierarchy(tempDir, aFoundElements);
 			tempWriter.println("</ul>");
+
 			tempWriter.println("<a name=\"Files\"><h3>Files</h3></a>");
 			Collections.sort(tempFiles, new Comparator<File>() {
 				@Override
@@ -110,8 +120,20 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 				}
 			});
 			for (SubFlow tempSubFlow : tempSubFlows) {
-				tempWriter.println(tempSubFlow.getName() + " <font size=1>in " + tempSubFlow.getFile().getName() + "</font><br/>");
+				tempWriter.println(tempSubFlow.getName() + " <font size=1>in " + createRelativeLink(tempDir, tempSubFlow.getFile()) + "</font><br/>");
 			}
+
+			tempWriter.println("<a name=\"UnusedFlows\"><h3>UnusedFlows</h3></a>");
+			Collections.sort(tempUnusedFlows, new Comparator<AbstractFlow>() {
+				@Override
+				public int compare(AbstractFlow aO1, AbstractFlow aO2) {
+					return aO1.getName().compareTo(aO2.getName());
+				}
+			});
+			for (AbstractFlow tempUnused : tempUnusedFlows) {
+				tempWriter.println(tempUnused.getName() + " <font size=1>in " + createRelativeLink(tempDir, tempUnused.getFile()) + "</font><br/>");
+			}
+
 			tempWriter.println("<a name=\"SetVariables\"><h3>SetVariables</h3></a>");
 			Collections.sort(tempSetVariables, new Comparator<SetVariable>() {
 				@Override
@@ -126,6 +148,57 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 			tempWriter.println("</html>");
 		}
 		getLog().info("Created " + tempIndexFile);
+	}
+
+	/**
+	 * @throws IOException
+	 *
+	 */
+	private void printCallHierarchy(File aDir, FoundElements aFoundElements) throws IOException {
+		File tempIndexFile = new File(aDir.getAbsolutePath() + "/call-hierarchy.html");
+		try (PrintWriter tempWriter = new PrintWriter(new BufferedWriter(new FileWriter(tempIndexFile)))) {
+			tempWriter.println("<html>");
+			tempWriter.println("<body>");
+			tempWriter.println("<a name=\"CallHierarchy\"><h3>CallHierarchy</h3></a>");
+			List<AbstractFlow> tempAllFlows = aFoundElements.getAllFlows();
+			Collections.sort(tempAllFlows, new Comparator<AbstractFlow>() {
+				@Override
+				public int compare(AbstractFlow aO1, AbstractFlow aO2) {
+					return aO1.getName().compareTo(aO2.getName());
+				}
+			});
+			tempWriter.println("<pre>");
+			for (AbstractFlow tempAbstractFlow : tempAllFlows) {
+				printCallTree(tempWriter, tempAbstractFlow, aFoundElements, 0);
+			}
+			tempWriter.println("</pre>");
+			tempWriter.println("</body>");
+			tempWriter.println("</html>");
+			getLog().info("Created " + tempIndexFile);
+		}
+	}
+
+	/**
+	 * @param aIntend
+	 *
+	 */
+	private void printCallTree(PrintWriter aWriter, AbstractFlow aAbstractFlow, FoundElements aFoundElements, int aIntend) {
+		List<AbstractFlow> tempCallingFlows = aFoundElements.getCallingFlows(aAbstractFlow);
+		if (aIntend == 0) {
+			if (tempCallingFlows.isEmpty()) {
+				return;
+			}
+			if (aFoundElements.isReferenced(aAbstractFlow)) {
+				return;
+			}
+		}
+		for (int i = 0; i < aIntend; i++) {
+			aWriter.print("  ");
+		}
+		aWriter.println(aAbstractFlow.getName());
+		for (AbstractFlow tempCallingFlow : tempCallingFlows) {
+			printCallTree(aWriter, tempCallingFlow, aFoundElements, aIntend + 1);
+		}
 	}
 
 	/**
@@ -192,6 +265,13 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 			if (tempFlowName != null) {
 				String tempFlowNameText = tempFlowName.getTextContent();
 				aFoundElements.add(new SubFlow(aParentNode, aFile, tempFlowNameText));
+			}
+		} else if ("flow-ref".equals(tempLocalName)) {
+			NamedNodeMap tempAttributes = aChildNode.getAttributes();
+			Node tempFlowName = tempAttributes.getNamedItem("name");
+			if (tempFlowName != null) {
+				String tempFlowNameText = tempFlowName.getTextContent();
+				aFoundElements.add(new FlowRef(aParentNode, aFile, tempFlowNameText, aFoundElements.getLastFoundFlow()));
 			}
 		} else if ("set-variable".equals(tempLocalName)) {
 			NamedNodeMap tempAttributes = aChildNode.getAttributes();

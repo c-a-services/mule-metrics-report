@@ -7,7 +7,7 @@ import org.w3c.dom.Node;
 /**
  *
  */
-public class AbstractMuleXmlElement {
+public abstract class AbstractMuleXmlElement {
 	private File file;
 
 	/**

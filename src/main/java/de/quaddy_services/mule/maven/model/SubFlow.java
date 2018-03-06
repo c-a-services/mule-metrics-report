@@ -7,23 +7,14 @@ import org.w3c.dom.Node;
 /**
  *
  */
-public class SubFlow extends AbstractMuleXmlElement {
+public class SubFlow extends AbstractFlow {
+
 	/**
-	 * @param aFile
 	 *
 	 */
 	public SubFlow(Node aParent, File aFile, String aName) {
-		super(aFile, aParent);
-		name = aName;
+		super(aParent, aFile, aName);
 
 	}
 
-	private String name;
-
-	/**
-	 * @see #name
-	 */
-	public String getName() {
-		return name;
-	}
 }
