@@ -5,7 +5,7 @@
 	<artifactId>mule-metrics-report</artifactId>
 	<version>2018.3.2-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
-
+	<name>mule-metrics-report</name>
 	<description>plugin which creates a metrics report for mule applications</description>
 	<url>https://github.com/rscadrde/mule-metrics-report/blob/master/README.md</url>
 
@@ -79,6 +79,21 @@
 					<!-- workaround error: reference not found -->
 					<doclint>none</doclint>
 				</configuration>
+			</plugin>
+			<plugin>
+				<!-- http://central.sonatype.org/pages/apache-maven.html -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
