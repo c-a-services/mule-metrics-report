@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -171,7 +173,7 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 			});
 			tempWriter.println("<pre>");
 			for (AbstractFlow tempAbstractFlow : tempAllFlows) {
-				printCallTree(tempWriter, tempAbstractFlow, aFoundElements, 0);
+				printCallTree(tempWriter, tempAbstractFlow, aFoundElements, 0, new HashSet<AbstractFlow>());
 			}
 			tempWriter.println("</pre>");
 			tempWriter.println("</body>");
@@ -182,9 +184,10 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 
 	/**
 	 * @param aIntend
+	 * @param aVisited
 	 *
 	 */
-	private void printCallTree(PrintWriter aWriter, AbstractFlow aAbstractFlow, FoundElements aFoundElements, int aIntend) {
+	private void printCallTree(PrintWriter aWriter, AbstractFlow aAbstractFlow, FoundElements aFoundElements, int aIntend, Set<AbstractFlow> aVisited) {
 		List<AbstractFlow> tempCallingFlows = aFoundElements.getCallingFlows(aAbstractFlow);
 		if (aIntend == 0) {
 			if (tempCallingFlows.isEmpty()) {
@@ -197,9 +200,14 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 		for (int i = 0; i < aIntend; i++) {
 			aWriter.print("  ");
 		}
+		if (aVisited.contains(aAbstractFlow)) {
+			aWriter.println("recursion with " + aAbstractFlow.getName());
+			return;
+		}
+		aVisited.add(aAbstractFlow);
 		aWriter.println(aAbstractFlow.getName());
 		for (AbstractFlow tempCallingFlow : tempCallingFlows) {
-			printCallTree(aWriter, tempCallingFlow, aFoundElements, aIntend + 1);
+			printCallTree(aWriter, tempCallingFlow, aFoundElements, aIntend + 1, new HashSet<>(aVisited));
 		}
 	}
 

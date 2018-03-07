@@ -27,4 +27,19 @@ public abstract class AbstractFlow extends AbstractMuleXmlElement {
 		return name;
 	}
 
+	/**
+	 *
+	 */
+	@Override
+	public String toString() {
+		StringBuilder tempBuilder = new StringBuilder();
+		tempBuilder.append("AbstractFlow [");
+		if (name != null) {
+			tempBuilder.append("name=");
+			tempBuilder.append(name);
+		}
+		tempBuilder.append("]");
+		return tempBuilder.toString();
+	}
+
 }
