@@ -9,6 +9,13 @@
 	<description>plugin which creates a metrics report for mule applications</description>
 	<url>https://github.com/rscadrde/mule-metrics-report/blob/master/README.md</url>
 
+	<developers>
+		<developer>
+			<id>cas</id>
+			<email>stefan.cordes.internet@adr.de</email>
+			<name>Stefan Cordes</name>
+		</developer>
+	</developers>
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
