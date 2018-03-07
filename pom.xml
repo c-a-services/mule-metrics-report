@@ -21,8 +21,8 @@
 		<url>https://github.com/rscadrde/mule-metrics-report</url>
 		<connection>scm:git:https://github.com/rscadrde/mule-metrics-report.git</connection>
 		<developerConnection>scm:git:https://github.com/rscadrde/mule-metrics-report.git</developerConnection>
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.maven</groupId>
@@ -66,11 +66,20 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-release-plugin</artifactId>
-					<version>2.5.3</version>
-				</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5.3</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+					<!-- workaround error: reference not found -->
+					<doclint>none</doclint>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<distributionManagement>
