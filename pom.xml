@@ -21,7 +21,8 @@
 		<url>https://github.com/rscadrde/mule-metrics-report</url>
 		<connection>scm:git:https://github.com/rscadrde/mule-metrics-report.git</connection>
 		<developerConnection>scm:git:https://github.com/rscadrde/mule-metrics-report.git</developerConnection>
-	</scm>
+	  <tag>HEAD</tag>
+  </scm>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.maven</groupId>
@@ -65,6 +66,11 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.5.3</version>
+				</plugin>
 		</plugins>
 	</build>
 	<distributionManagement>
