@@ -146,7 +146,8 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 				}
 			});
 			for (SetVariable tempSetVariable : tempSetVariables) {
-				tempWriter.println(tempSetVariable.getName() + " <font size=1>in " + tempSetVariable.getFile().getName() + "</font><br/>");
+				tempWriter.println(tempSetVariable.getName() + " <font size=1>in <a href=\"" + createRelativeLink(tempDir, tempSetVariable.getFile()) + "\">"
+						+ tempSetVariable.getFile().getName() + "</a></font><br/>");
 			}
 			tempWriter.println("</body>");
 			tempWriter.println("</html>");
