@@ -45,16 +45,16 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 	 */
 	private static final String CALL_HIERARCHY_HTML = "call-hierarchy.html";
 
-	@Parameter(defaultValue = "${project.build.directory}/metrics", readonly = true)
+	@Parameter(defaultValue = "${project.build.directory}/metrics", readonly = true, property = "mulemetrics.outputDirectory")
 	private String outputDirectory;
 
-	@Parameter(defaultValue = "src/main/app/", readonly = true)
+	@Parameter(defaultValue = "src/main/app/", readonly = true, property = "mulemetrics.muleAppDirectory")
 	private String muleAppDirectory;
 
 	/**
 	 * Possibility to make report smaller.
 	 */
-	@Parameter()
+	@Parameter(property = "mulemetrics.ignoreFiles")
 	private List<String> ignoreFiles;
 
 	/**
