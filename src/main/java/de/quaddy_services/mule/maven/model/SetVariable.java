@@ -13,17 +13,8 @@ public class SetVariable extends AbstractMuleXmlElement {
 	 *
 	 */
 	public SetVariable(Node aParent, File aFile, String aName) {
-		super(aFile, aParent);
-		name = aName;
+		super(aFile, aParent, aName);
 
 	}
 
-	private String name;
-
-	/**
-	 * @see #name
-	 */
-	public String getName() {
-		return name;
-	}
 }

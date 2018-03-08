@@ -15,18 +15,8 @@ public class FlowRef extends AbstractMuleXmlElement {
 	 *
 	 */
 	public FlowRef(Node aParent, File aFile, String aName, AbstractFlow aAbstractFlow) {
-		super(aFile, aParent);
-		name = aName;
+		super(aFile, aParent, aName);
 		containedInFlow = aAbstractFlow;
-	}
-
-	private String name;
-
-	/**
-	 * @see #name
-	 */
-	public String getName() {
-		return name;
 	}
 
 	/**

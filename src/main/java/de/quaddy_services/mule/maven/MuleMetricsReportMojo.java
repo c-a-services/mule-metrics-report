@@ -29,6 +29,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import de.quaddy_services.mule.maven.model.AbstractFlow;
+import de.quaddy_services.mule.maven.model.AbstractMuleXmlElement;
 import de.quaddy_services.mule.maven.model.Flow;
 import de.quaddy_services.mule.maven.model.FlowRef;
 import de.quaddy_services.mule.maven.model.SetVariable;
@@ -142,47 +143,27 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 				tempWriter.println("<a href=\"" + createRelativeLink(tempDir, tempFile) + "\">" + tempFile.getName() + "</a> " + tempOtherLink + "<br/>");
 			}
 			tempWriter.println("<a name=\"Flows\"><h3>Flows</h3></a>");
-			Collections.sort(tempFlows, new Comparator<Flow>() {
-				@Override
-				public int compare(Flow aO1, Flow aO2) {
-					return aO1.getName().compareTo(aO2.getName());
-				}
-			});
+			sortByName(tempFlows);
 			for (Flow tempFlow : tempFlows) {
 				tempWriter.println(tempFlow.getName() + " <font size=1>in <a href=\"" + createRelativeLink(tempDir, tempFlow.getFile()) + "\">"
 						+ tempFlow.getFile().getName() + "</a></font><br/>");
 			}
 			tempWriter.println("<a name=\"SubFlows\"><h3>SubFlows</h3></a>");
-			Collections.sort(tempSubFlows, new Comparator<SubFlow>() {
-				@Override
-				public int compare(SubFlow aO1, SubFlow aO2) {
-					return aO1.getName().compareTo(aO2.getName());
-				}
-			});
+			sortByName(tempSubFlows);
 			for (SubFlow tempSubFlow : tempSubFlows) {
 				tempWriter.println(tempSubFlow.getName() + " <font size=1>in <a href=\"" + createRelativeLink(tempDir, tempSubFlow.getFile()) + "\">"
 						+ tempSubFlow.getFile().getName() + "</a></font><br/>");
 			}
 
 			tempWriter.println("<a name=\"UnusedFlows\"><h3>UnusedFlows</h3></a>");
-			Collections.sort(tempUnusedFlows, new Comparator<AbstractFlow>() {
-				@Override
-				public int compare(AbstractFlow aO1, AbstractFlow aO2) {
-					return aO1.getName().compareTo(aO2.getName());
-				}
-			});
+			sortByName(tempUnusedFlows);
 			for (AbstractFlow tempUnused : tempUnusedFlows) {
 				tempWriter.println(tempUnused.getName() + " <font size=1>in <a href=\"" + createRelativeLink(tempDir, tempUnused.getFile()) + "\">"
 						+ tempUnused.getFile().getName() + "</a></font><br/>");
 			}
 
 			tempWriter.println("<a name=\"SetVariables\"><h3>SetVariables</h3></a>");
-			Collections.sort(tempSetVariables, new Comparator<SetVariable>() {
-				@Override
-				public int compare(SetVariable aO1, SetVariable aO2) {
-					return aO1.getName().compareTo(aO2.getName());
-				}
-			});
+			sortByName(tempSetVariables);
 			for (SetVariable tempSetVariable : tempSetVariables) {
 				tempWriter.println(tempSetVariable.getName() + " <font size=1>in <a href=\"" + createRelativeLink(tempDir, tempSetVariable.getFile()) + "\">"
 						+ tempSetVariable.getFile().getName() + "</a></font><br/>");
@@ -191,6 +172,22 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 			tempWriter.println("</html>");
 		}
 		getLog().info("Created " + tempIndexFile);
+	}
+
+	/**
+	 *
+	 */
+	private <E extends AbstractMuleXmlElement> void sortByName(List<E> aFiles) {
+		Collections.sort(aFiles, new Comparator<E>() {
+			@Override
+			public int compare(E aO1, E aO2) {
+				int c = aO1.getName().compareTo(aO2.getName());
+				if (c != 0) {
+					return c;
+				}
+				return aO1.getFile().getName().compareTo(aO2.getFile().getName());
+			}
+		});
 	}
 
 	/**

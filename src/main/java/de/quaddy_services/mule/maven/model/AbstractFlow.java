@@ -13,33 +13,8 @@ public abstract class AbstractFlow extends AbstractMuleXmlElement {
 	 *
 	 */
 	public AbstractFlow(Node aParent, File aFile, String aName) {
-		super(aFile, aParent);
-		name = aName;
+		super(aFile, aParent, aName);
 
-	}
-
-	private String name;
-
-	/**
-	 * @see #name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 *
-	 */
-	@Override
-	public String toString() {
-		StringBuilder tempBuilder = new StringBuilder();
-		tempBuilder.append("AbstractFlow [");
-		if (name != null) {
-			tempBuilder.append("name=");
-			tempBuilder.append(name);
-		}
-		tempBuilder.append("]");
-		return tempBuilder.toString();
 	}
 
 }
