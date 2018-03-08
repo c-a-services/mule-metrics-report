@@ -3,6 +3,7 @@ package de.quaddy_services.mule.maven;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -61,21 +62,21 @@ public class FoundElements {
 	 * @see #flows
 	 */
 	public List<Flow> getFlows() {
-		return flows;
+		return new ArrayList<>(flows);
 	}
 
 	/**
 	 * @see #subFlows
 	 */
 	public List<SubFlow> getSubFlows() {
-		return subFlows;
+		return new ArrayList<>(subFlows);
 	}
 
 	/**
 	 * @see #setVariables
 	 */
 	public List<SetVariable> getSetVariables() {
-		return setVariables;
+		return new ArrayList<>(setVariables);
 	}
 
 	/**
@@ -126,7 +127,6 @@ public class FoundElements {
 	private List<AbstractMuleXmlElement> getAllElements() {
 		List<AbstractMuleXmlElement> tempAll = new ArrayList<>();
 		tempAll.addAll(getFlows());
-		tempAll.addAll(getFlowRefs());
 		tempAll.addAll(getSubFlows());
 		tempAll.addAll(getSetVariables());
 		return tempAll;
@@ -143,7 +143,7 @@ public class FoundElements {
 	 * @see #flowsRefs
 	 */
 	public List<FlowRef> getFlowRefs() {
-		return flowRefs;
+		return new ArrayList<>(flowRefs);
 	}
 
 	/**
@@ -201,6 +201,46 @@ public class FoundElements {
 			}
 		}
 		return tempUnusedFlows;
+	}
+
+	/**
+	 *
+	 */
+	public FoundElements removeIgnoredFiles(List<String> aIgnoreFiles) {
+		FoundElements tempClone = new FoundElements();
+		// do not filter flowRefs to detect unused flows correctly.
+		tempClone.flowRefs = getFlowRefs();
+		tempClone.flows = filterByFileName(getFlows(), aIgnoreFiles);
+		tempClone.subFlows = filterByFileName(getSubFlows(), aIgnoreFiles);
+		tempClone.setVariables = filterByFileName(getSetVariables(), aIgnoreFiles);
+
+		return tempClone;
+	}
+
+	/**
+	 *
+	 */
+	private <E extends AbstractMuleXmlElement> List<E> filterByFileName(List<E> anElements, List<String> aIgnoreFiles) {
+		if (aIgnoreFiles != null && !aIgnoreFiles.isEmpty()) {
+			for (Iterator<E> i = anElements.iterator(); i.hasNext();) {
+				E tempElement = i.next();
+				if (isIgnoredFile(tempElement.getFile(), aIgnoreFiles)) {
+					i.remove();
+				}
+			}
+		}
+		return anElements;
+	}
+
+	private boolean isIgnoredFile(File aFile, List<String> aIgnoreFiles) {
+		if (aIgnoreFiles != null && !aIgnoreFiles.isEmpty()) {
+			for (String tempFileName : aIgnoreFiles) {
+				if (aFile.getName().equals(tempFileName)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 }
