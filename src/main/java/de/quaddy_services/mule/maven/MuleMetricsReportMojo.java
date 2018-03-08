@@ -5,9 +5,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -27,6 +30,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import de.quaddy_services.mule.maven.model.AbstractFlow;
+import de.quaddy_services.mule.maven.model.AbstractMuleXmlElement;
 import de.quaddy_services.mule.maven.model.Flow;
 import de.quaddy_services.mule.maven.model.FlowRef;
 import de.quaddy_services.mule.maven.model.SetVariable;
@@ -45,12 +49,19 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 	private String muleAppDirectory;
 
 	/**
+	 * Possibility to make report smaller.
+	 */
+	@Parameter()
+	private List<String> ignoreFiles;
+
+	/**
 	 *
 	 */
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		getLog().info("Generate to " + getOutputDirectory());
 		getLog().info("Source " + getMuleAppDirectory());
+		getLog().info("ignoredFiles=" + (ignoreFiles == null ? "n/a" : Arrays.asList(ignoreFiles).toString()));
 		File tempAppDir = new File(getMuleAppDirectory());
 		FoundElements tempFoundElements = new FoundElements();
 		collectMuleFiles(tempFoundElements, tempAppDir);
@@ -66,9 +77,23 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 	 *
 	 */
 	private void printReport(FoundElements aFoundElements) throws IOException {
+		if (ignoreFiles != null && !ignoreFiles.isEmpty()) {
+			printReport(aFoundElements, "index.html", ignoreFiles);
+			printReport(aFoundElements, "index-all-files.html", new ArrayList<String>());
+		} else {
+			printReport(aFoundElements, "index.html", new ArrayList<String>());
+		}
+	}
+
+	/**
+	 * @param aIgnoreFiles
+	 * @param aTargetFileName
+	 *
+	 */
+	public void printReport(FoundElements aFoundElements, String aTargetFileName, List<String> aIgnoreFiles) throws IOException {
 		File tempDir = new File(getOutputDirectory());
 		tempDir.mkdirs();
-		File tempIndexFile = new File(tempDir.getAbsolutePath() + "/index.html");
+		File tempIndexFile = new File(tempDir.getAbsolutePath() + '/' + aTargetFileName);
 		try (PrintWriter tempWriter = new PrintWriter(new BufferedWriter(new FileWriter(tempIndexFile)))) {
 			tempWriter.println("<html>");
 			tempWriter.println("<body>");
@@ -85,12 +110,13 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 			List<SetVariable> tempSetVariables = aFoundElements.getSetVariables();
 
 			List<AbstractFlow> tempUnusedFlows = aFoundElements.getUnusedFlows();
+			filterByFileName(tempUnusedFlows, aIgnoreFiles);
 			tempWriter.println("<li><a href=\"#UnusedFlows\">" + tempUnusedFlows.size() + " unused flows</a> </li>");
 
 			tempWriter.println("<li>" + tempSetVariables.size() + " <a href=\"#SetVariables\">set-variables</a> </li>");
 
 			tempWriter.println("<li><a href=\"call-hierarchy.html\">CallHierarchy</a> </li>");
-			printCallHierarchy(tempDir, aFoundElements);
+			printCallHierarchy(tempDir, aFoundElements, aIgnoreFiles);
 			tempWriter.println("</ul>");
 
 			tempWriter.println("<a name=\"Files\"><h3>Files</h3></a>");
@@ -104,6 +130,7 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 				tempWriter.println("<a href=\"" + createRelativeLink(tempDir, tempFile) + "\">" + tempFile.getName() + "</a><br/>");
 			}
 			tempWriter.println("<a name=\"Flows\"><h3>Flows</h3></a>");
+			filterByFileName(tempFlows, aIgnoreFiles);
 			Collections.sort(tempFlows, new Comparator<Flow>() {
 				@Override
 				public int compare(Flow aO1, Flow aO2) {
@@ -115,6 +142,7 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 						+ tempFlow.getFile().getName() + "</a></font><br/>");
 			}
 			tempWriter.println("<a name=\"SubFlows\"><h3>SubFlows</h3></a>");
+			filterByFileName(tempSubFlows, aIgnoreFiles);
 			Collections.sort(tempSubFlows, new Comparator<SubFlow>() {
 				@Override
 				public int compare(SubFlow aO1, SubFlow aO2) {
@@ -139,6 +167,7 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 			}
 
 			tempWriter.println("<a name=\"SetVariables\"><h3>SetVariables</h3></a>");
+			filterByFileName(tempSetVariables, aIgnoreFiles);
 			Collections.sort(tempSetVariables, new Comparator<SetVariable>() {
 				@Override
 				public int compare(SetVariable aO1, SetVariable aO2) {
@@ -156,16 +185,18 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 	}
 
 	/**
+	 * @param aIgnoreFiles
 	 * @throws IOException
 	 *
 	 */
-	private void printCallHierarchy(File aDir, FoundElements aFoundElements) throws IOException {
+	private void printCallHierarchy(File aDir, FoundElements aFoundElements, List<String> aIgnoreFiles) throws IOException {
 		File tempIndexFile = new File(aDir.getAbsolutePath() + "/call-hierarchy.html");
 		try (PrintWriter tempWriter = new PrintWriter(new BufferedWriter(new FileWriter(tempIndexFile)))) {
 			tempWriter.println("<html>");
 			tempWriter.println("<body>");
 			tempWriter.println("<a name=\"CallHierarchy\"><h3>CallHierarchy</h3></a>");
 			List<AbstractFlow> tempAllFlows = aFoundElements.getAllFlows();
+			filterByFileName(tempAllFlows, aIgnoreFiles);
 			Collections.sort(tempAllFlows, new Comparator<AbstractFlow>() {
 				@Override
 				public int compare(AbstractFlow aO1, AbstractFlow aO2) {
@@ -180,6 +211,23 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 			tempWriter.println("</body>");
 			tempWriter.println("</html>");
 			getLog().info("Created " + tempIndexFile);
+		}
+	}
+
+	/**
+	 *
+	 */
+	private <E extends AbstractMuleXmlElement> void filterByFileName(List<E> anElements, List<String> aIgnoreFiles) {
+		if (aIgnoreFiles != null && !aIgnoreFiles.isEmpty()) {
+			for (Iterator<E> i = anElements.iterator(); i.hasNext();) {
+				E tempElement = i.next();
+				for (String tempFileName : aIgnoreFiles) {
+					if (tempElement.getFile().getName().equals(tempFileName)) {
+						getLog().debug("Remove due to ignored files: " + tempElement);
+						i.remove();
+					}
+				}
+			}
 		}
 	}
 
