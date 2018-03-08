@@ -320,6 +320,8 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 			if (tempFlowName != null) {
 				String tempFlowNameText = tempFlowName.getTextContent();
 				aFoundElements.add(new Flow(aParentNode, aFile, tempFlowNameText));
+			} else {
+				getLog().warn("Did not find attribute name in " + aChildNode.getNamespaceURI() + " " + tempLocalName + " in " + aFile);
 			}
 		} else if ("sub-flow".equals(tempLocalName)) {
 			NamedNodeMap tempAttributes = aChildNode.getAttributes();
@@ -327,6 +329,8 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 			if (tempFlowName != null) {
 				String tempFlowNameText = tempFlowName.getTextContent();
 				aFoundElements.add(new SubFlow(aParentNode, aFile, tempFlowNameText));
+			} else {
+				getLog().warn("Did not find attribute name in " + aChildNode.getNamespaceURI() + " " + tempLocalName + " in " + aFile);
 			}
 		} else if ("flow-ref".equals(tempLocalName)) {
 			NamedNodeMap tempAttributes = aChildNode.getAttributes();
@@ -334,13 +338,21 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 			if (tempFlowName != null) {
 				String tempFlowNameText = tempFlowName.getTextContent();
 				aFoundElements.add(new FlowRef(aParentNode, aFile, tempFlowNameText, aFoundElements.getLastFoundFlow()));
+			} else {
+				getLog().warn("Did not find attribute name in " + aChildNode.getNamespaceURI() + " " + tempLocalName + " in " + aFile);
 			}
 		} else if ("set-variable".equals(tempLocalName)) {
+			// covers
+			// <set-variable variableName="
+			// and
+			// <dw:set-variable variableName="
 			NamedNodeMap tempAttributes = aChildNode.getAttributes();
 			Node tempVariableName = tempAttributes.getNamedItem("variableName");
 			if (tempVariableName != null) {
 				String tempFlowNameText = tempVariableName.getTextContent();
 				aFoundElements.add(new SetVariable(aParentNode, aFile, tempFlowNameText));
+			} else {
+				getLog().warn("Did not find attribute variableName in " + aChildNode.getNamespaceURI() + " " + tempLocalName + " in " + aFile);
 			}
 		}
 
