@@ -58,6 +58,9 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 	@Parameter(property = "mulemetrics.ignoreFiles")
 	private List<String> ignoreFiles;
 
+	@Parameter(property = "mulemetrics.skip")
+	private boolean skip;
+
 	/**
 	 *
 	 */
@@ -66,13 +69,20 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 		getLog().info("Generate to " + getOutputDirectory());
 		getLog().info("Source " + getMuleAppDirectory());
 		getLog().info("ignoredFiles=" + (getIgnoreFiles() == null ? "n/a" : Arrays.asList(getIgnoreFiles()).toString()));
+		if (skip) {
+			getLog().info("Skip is set. Do nothing.");
+			return;
+		}
 		File tempAppDir = new File(getMuleAppDirectory());
 		FoundElements tempFoundElements = new FoundElements();
-		collectMuleFiles(tempFoundElements, tempAppDir);
-		try {
-			printReport(tempFoundElements);
-		} catch (IOException e) {
-			throw new MojoExecutionException("Error creating report", e);
+		if (collectMuleFiles(tempFoundElements, tempAppDir)) {
+			try {
+				printReport(tempFoundElements);
+			} catch (IOException e) {
+				throw new MojoExecutionException("Error creating report", e);
+			}
+		} else {
+			getLog().info("Skipping No mule files found.");
 		}
 	}
 
@@ -281,13 +291,15 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 	 * @throws MojoExecutionException
 	 *
 	 */
-	private void collectMuleFiles(FoundElements aFoundElements, File aAppDir) throws MojoExecutionException {
+	private boolean collectMuleFiles(FoundElements aFoundElements, File aAppDir) throws MojoExecutionException {
+		boolean tempAnyFileFound = false;
 		getLog().debug("Scan directory " + aAppDir);
 		File[] tempFiles = aAppDir.listFiles();
 		for (File tempFile : tempFiles) {
 			if (tempFile.isDirectory()) {
-				collectMuleFiles(aFoundElements, tempFile);
+				tempAnyFileFound = tempAnyFileFound || collectMuleFiles(aFoundElements, tempFile);
 			} else if (tempFile.getName().endsWith(".xml")) {
+				tempAnyFileFound = true;
 				getLog().debug("Found xml " + tempFile.getAbsolutePath());
 				DocumentBuilderFactory tempDbf = DocumentBuilderFactory.newInstance();
 				tempDbf.setNamespaceAware(true);
@@ -300,6 +312,7 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 				}
 			}
 		}
+		return tempAnyFileFound;
 	}
 
 	/**
