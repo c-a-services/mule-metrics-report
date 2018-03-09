@@ -6,7 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -68,7 +67,7 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		getLog().info("Generate to " + getOutputDirectory());
 		getLog().info("Source " + getMuleAppDirectory());
-		getLog().info("ignoredFiles=" + (getIgnoreFiles() == null ? "n/a" : Arrays.asList(getIgnoreFiles()).toString()));
+		getLog().info("ignoredFiles=" + (getIgnoreFiles() == null ? "n/a" : getIgnoreFiles().toString()));
 		if (skip) {
 			getLog().info("Skip is set. Do nothing.");
 			return;
