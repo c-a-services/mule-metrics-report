@@ -48,7 +48,7 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 	@Parameter(defaultValue = "${project.build.directory}/metrics", readonly = true, property = "mulemetrics.outputDirectory")
 	private String outputDirectory;
 
-	@Parameter(defaultValue = "src/main/app/", readonly = true, property = "mulemetrics.muleAppDirectory")
+	@Parameter(defaultValue = "${project.basedir}/src/main/app/", readonly = true, property = "mulemetrics.muleAppDirectory")
 	private String muleAppDirectory;
 
 	/**
