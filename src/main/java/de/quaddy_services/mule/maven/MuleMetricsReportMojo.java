@@ -295,20 +295,22 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 		boolean tempAnyFileFound = false;
 		getLog().debug("Scan directory " + aAppDir);
 		File[] tempFiles = aAppDir.listFiles();
-		for (File tempFile : tempFiles) {
-			if (tempFile.isDirectory()) {
-				tempAnyFileFound = tempAnyFileFound || collectMuleFiles(aFoundElements, tempFile);
-			} else if (tempFile.getName().endsWith(".xml")) {
-				tempAnyFileFound = true;
-				getLog().debug("Found xml " + tempFile.getAbsolutePath());
-				DocumentBuilderFactory tempDbf = DocumentBuilderFactory.newInstance();
-				tempDbf.setNamespaceAware(true);
-				try {
-					DocumentBuilder tempDb = tempDbf.newDocumentBuilder();
-					Document tempDoc = tempDb.parse(tempFile);
-					parseFile(aFoundElements, tempFile, null, tempDoc);
-				} catch (SAXException | ParserConfigurationException | IOException e) {
-					throw new MojoExecutionException("Error parsing " + tempFile.getAbsolutePath(), e);
+		if (tempFiles != null) {
+			for (File tempFile : tempFiles) {
+				if (tempFile.isDirectory()) {
+					tempAnyFileFound = tempAnyFileFound || collectMuleFiles(aFoundElements, tempFile);
+				} else if (tempFile.getName().endsWith(".xml")) {
+					tempAnyFileFound = true;
+					getLog().debug("Found xml " + tempFile.getAbsolutePath());
+					DocumentBuilderFactory tempDbf = DocumentBuilderFactory.newInstance();
+					tempDbf.setNamespaceAware(true);
+					try {
+						DocumentBuilder tempDb = tempDbf.newDocumentBuilder();
+						Document tempDoc = tempDb.parse(tempFile);
+						parseFile(aFoundElements, tempFile, null, tempDoc);
+					} catch (SAXException | ParserConfigurationException | IOException e) {
+						throw new MojoExecutionException("Error parsing " + tempFile.getAbsolutePath(), e);
+					}
 				}
 			}
 		}
