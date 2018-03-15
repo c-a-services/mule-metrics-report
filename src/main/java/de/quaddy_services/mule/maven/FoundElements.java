@@ -196,7 +196,7 @@ public class FoundElements {
 	public List<AbstractFlow> getUnusedFlows() {
 		List<AbstractFlow> tempUnusedFlows = new ArrayList<>();
 		for (AbstractFlow tempAbstractFlow : getAllFlows()) {
-			if (!isReferenced(tempAbstractFlow) && getCallingFlows(tempAbstractFlow).isEmpty()) {
+			if (getCallingFlows(tempAbstractFlow).isEmpty()) {
 				tempUnusedFlows.add(tempAbstractFlow);
 			}
 		}
