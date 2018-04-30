@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.quaddy-services.mule.maven</groupId>
 	<artifactId>mule-metrics-report</artifactId>
-	<version>2018.4.1-SNAPSHOT</version>
+	<version>2018.4.1</version>
 	<packaging>maven-plugin</packaging>
 	<name>mule-metrics-report</name>
 	<description>plugin which creates a metrics report for mule applications</description>
@@ -28,7 +28,7 @@
 		<url>https://github.com/c-a-services/mule-metrics-report</url>
 		<connection>scm:git:https://github.com/c-a-services/mule-metrics-report.git</connection>
 		<developerConnection>scm:git:https://github.com/c-a-services/mule-metrics-report.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>mule-metrics-report-2018.4.1</tag>
 	</scm>
 	<dependencies>
 		<dependency>
