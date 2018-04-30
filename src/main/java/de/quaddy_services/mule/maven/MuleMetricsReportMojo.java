@@ -18,7 +18,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.w3c.dom.Document;
@@ -48,8 +47,17 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 	@Parameter(defaultValue = "${project.build.directory}/metrics", readonly = true, property = "mulemetrics.outputDirectory")
 	private String outputDirectory;
 
+	/**
+	 * This is mule3 default.
+	 */
 	@Parameter(defaultValue = "${project.basedir}/src/main/app/", readonly = true, property = "mulemetrics.muleAppDirectory")
 	private String muleAppDirectory;
+
+	/**
+	 * Default mule4 *.xml folder is src/main/mule/
+	 */
+	@Parameter(defaultValue = "${project.basedir}/src/main/mule/", readonly = true, property = "mulemetrics.mule4AppDirectory")
+	private String mule4AppDirectory;
 
 	/**
 	 * Possibility to make report smaller.
@@ -64,17 +72,28 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 	 *
 	 */
 	@Override
-	public void execute() throws MojoExecutionException, MojoFailureException {
+	public void execute() throws MojoExecutionException {
 		getLog().info("Generate to " + getOutputDirectory());
-		getLog().info("Source " + getMuleAppDirectory());
+		getLog().info("Source: Mule3: " + getMuleAppDirectory());
+		getLog().info("Source: Mule4: " + getMule4AppDirectory());
 		getLog().info("ignoredFiles=" + (getIgnoreFiles() == null ? "n/a" : getIgnoreFiles().toString()));
 		if (skip) {
 			getLog().info("Skip is set. Do nothing.");
 			return;
 		}
-		File tempAppDir = new File(getMuleAppDirectory());
 		FoundElements tempFoundElements = new FoundElements();
-		if (collectMuleFiles(tempFoundElements, tempAppDir)) {
+		File tempAppDir = new File(getMuleAppDirectory());
+		boolean tempFoundMule3Files = collectMuleFiles(tempFoundElements, tempAppDir);
+		if (tempFoundMule3Files) {
+			getLog().debug("Found files in " + tempAppDir);
+		}
+		File tempMule4AppDir = new File(getMule4AppDirectory());
+		boolean tempFoundMule4Files = collectMuleFiles(tempFoundElements, tempMule4AppDir);
+		if (tempFoundMule4Files) {
+			getLog().debug("Found files in " + tempAppDir);
+		}
+
+		if (tempFoundMule3Files || tempFoundMule4Files) {
 			try {
 				printReport(tempFoundElements);
 			} catch (IOException e) {
@@ -414,6 +433,13 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 	 */
 	public void setIgnoreFiles(List<String> aIgnoreFiles) {
 		ignoreFiles = aIgnoreFiles;
+	}
+
+	/**
+	 * @see #mule4AppDirectory
+	 */
+	public String getMule4AppDirectory() {
+		return mule4AppDirectory;
 	}
 
 }
