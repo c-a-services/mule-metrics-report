@@ -13,6 +13,7 @@ Commandline attribtes needs to be prefixed to the configuration ones with "mulem
 
 ```
 -Dmulemetrics.muleAppDirectory=
+-Dmulemetrics.mule4AppDirectory=
 -Dmulemetrics.outputDirectory=
 -Dmulemetrics.ignoreFiles=
 ```
@@ -43,4 +44,6 @@ For automatic file creation when using mvn package you can add
 
 ```
 
-to your <plugins> section in the pom.xml
+to your <plugins> section in the pom.xml.
+
+Example report: (https://rawgit.com/c-a-services/mule-metrics-report/master/src/main/site/resources/metrics/index.html)
