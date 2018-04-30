@@ -1,0 +1,30 @@
+<html>
+<body>
+<h3>Statistics</h3>
+<ul>
+<li>2 <a href="#Files">files</a>. </li>
+<li>8 <a href="#Flows">flows</a>. Average per file: 4.0 </li>
+<li>1 <a href="#SubFlows">sub-flows</a>. Average per file: 1.0</li>
+<li><a href="#UnusedFlows">1 unused flows</a> </li>
+<li>0 <a href="#SetVariables">set-variables</a> </li>
+<li><a href="call-hierarchy.html">CallHierarchy</a> </li>
+</ul>
+<a name="Files"><h3>Files</h3></a>
+<a href="../../src/main/app/api.xml">api.xml</a> <br/>
+<a href="../../src/main/app/handle-participants.xml">handle-participants.xml</a> <br/>
+<a name="Flows"><h3>Flows</h3></a>
+api-main <font size=1>in <a href="../../src/main/app/api.xml">api.xml</a></font><br/>
+get-participants <font size=1>in <a href="../../src/main/app/handle-participants.xml">handle-participants.xml</a></font><br/>
+get:/change-log-level/{loggerName}/{newLevel}:api-config <font size=1>in <a href="../../src/main/app/api.xml">api.xml</a></font><br/>
+get:/participants:api-config <font size=1>in <a href="../../src/main/app/api.xml">api.xml</a></font><br/>
+get:/ping:api-config <font size=1>in <a href="../../src/main/app/api.xml">api.xml</a></font><br/>
+get:/teams:api-config <font size=1>in <a href="../../src/main/app/api.xml">api.xml</a></font><br/>
+put-participant <font size=1>in <a href="../../src/main/app/handle-participants.xml">handle-participants.xml</a></font><br/>
+put:/participants:application/json:api-config <font size=1>in <a href="../../src/main/app/api.xml">api.xml</a></font><br/>
+<a name="SubFlows"><h3>SubFlows</h3></a>
+kitaApp-security <font size=1>in <a href="../../src/main/app/api.xml">api.xml</a></font><br/>
+<a name="UnusedFlows"><h3>UnusedFlows</h3></a>
+api-main <font size=1>in <a href="../../src/main/app/api.xml">api.xml</a></font><br/>
+<a name="SetVariables"><h3>SetVariables</h3></a>
+</body>
+</html>
