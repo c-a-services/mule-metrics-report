@@ -46,4 +46,4 @@ For automatic file creation when using mvn package you can add
 
 to your <plugins> section in the pom.xml.
 
-Example report: (https://rawgit.com/c-a-services/mule-metrics-report/master/src/main/site/resources/metrics/index.html)
+Example report: (https://c-a-services.github.io/mule-metrics-report/metrics-sample-report/index.html)
