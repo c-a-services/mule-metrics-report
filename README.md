@@ -24,7 +24,7 @@ For automatic file creation when using mvn package you can add
 			<plugin>
 				<groupId>io.github.c-a-services.mule.maven</groupId>
 				<artifactId>mule-metrics-report</artifactId>
-				<version>2018.4.2</version>
+				<version>2019.11.1</version>
 				<executions>
 					<execution>
 						<id>generate</id>
