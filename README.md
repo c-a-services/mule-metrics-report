@@ -4,7 +4,7 @@ maven plugin which creates a metrics report for [mule applications](https://www.
 Usage:
 
 ```
-mvn de.quaddy-services.mule.maven:mule-metrics-report:generate
+mvn io.github.c-a-services.mule.maven:mule-metrics-report:generate
 ```
 
 and then a file `target/matrics/index.html` will be created.
@@ -22,9 +22,9 @@ For automatic file creation when using mvn package you can add
 
 ```
 			<plugin>
-				<groupId>de.quaddy-services.mule.maven</groupId>
+				<groupId>io.github.c-a-services.mule.maven</groupId>
 				<artifactId>mule-metrics-report</artifactId>
-				<version>2018.4.1</version>
+				<version>2018.4.2</version>
 				<executions>
 					<execution>
 						<id>generate</id>
