@@ -27,8 +27,8 @@
 
 	<scm>
 		<url>https://github.com/c-a-services/mule-metrics-report</url>
-		<connection>scm:git:https://github.com/c-a-services/mule-metrics-report.git</connection>
-		<developerConnection>scm:git:https://github.com/c-a-services/mule-metrics-report.git</developerConnection>
+		<connection>scm:git:git@github.com:c-a-services/mule-metrics-report.git</connection>
+		<developerConnection>scm:git:git@github.com:c-a-services/mule-metrics-report.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 	<dependencies>
