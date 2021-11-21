@@ -44,7 +44,7 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 	 */
 	private static final String CALL_HIERARCHY_HTML = "call-hierarchy.html";
 
-	@Parameter(defaultValue = "${project.build.directory}/metrics", property = "mulemetrics.outputDirectory")
+	@Parameter(defaultValue = "${project.build.directory}/site/metrics", property = "mulemetrics.outputDirectory")
 	private String outputDirectory;
 
 	/**

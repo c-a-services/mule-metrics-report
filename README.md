@@ -7,7 +7,7 @@ Usage:
 mvn io.github.c-a-services.mule.maven:mule-metrics-report:generate
 ```
 
-and then a file `target/matrics/index.html` will be created.
+and then a file `target/site/matrics/index.html` will be created.
 
 Commandline attribtes needs to be prefixed to the configuration ones with "mulemetrics.":
 
