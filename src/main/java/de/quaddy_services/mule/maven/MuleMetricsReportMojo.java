@@ -44,19 +44,19 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 	 */
 	private static final String CALL_HIERARCHY_HTML = "call-hierarchy.html";
 
-	@Parameter(defaultValue = "${project.build.directory}/metrics", readonly = true, property = "mulemetrics.outputDirectory")
+	@Parameter(defaultValue = "${project.build.directory}/metrics", property = "mulemetrics.outputDirectory")
 	private String outputDirectory;
 
 	/**
 	 * This is mule3 default.
 	 */
-	@Parameter(defaultValue = "${project.basedir}/src/main/app/", readonly = true, property = "mulemetrics.muleAppDirectory")
+	@Parameter(defaultValue = "${project.basedir}/src/main/app/", property = "mulemetrics.muleAppDirectory")
 	private String muleAppDirectory;
 
 	/**
 	 * Default mule4 *.xml folder is src/main/mule/
 	 */
-	@Parameter(defaultValue = "${project.basedir}/src/main/mule/", readonly = true, property = "mulemetrics.mule4AppDirectory")
+	@Parameter(defaultValue = "${project.basedir}/src/main/mule/", property = "mulemetrics.mule4AppDirectory")
 	private String mule4AppDirectory;
 
 	/**
