@@ -111,11 +111,11 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 	private void printReport(FoundElements aFoundElements) throws IOException {
 		List<String> tempIgnoreFiles = getIgnoreFiles();
 		if (tempIgnoreFiles != null && !tempIgnoreFiles.isEmpty()) {
-			printReport(aFoundElements, "index.html", tempIgnoreFiles, "");
+			printReport(aFoundElements, "index.html", tempIgnoreFiles);
+			printReport(aFoundElements, "index-all-files.html", new ArrayList<String>());
 		} else {
-			printReport(aFoundElements, "index.html", new ArrayList<String>(), "");
+			printReport(aFoundElements, "index.html", new ArrayList<String>());
 		}
-		printReport(aFoundElements, "index-all-files.html", new ArrayList<String>(), "-all-files");
 		File tempDir = new File(getOutputDirectory());
 		printCallHierarchy(tempDir, aFoundElements);
 	}
@@ -125,7 +125,7 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 	 * @param aTargetFileName
 	 *
 	 */
-	private void printReport(FoundElements aFoundElements, String aTargetFileName, List<String> aIgnoreFiles, String aFileNameSuffix) throws IOException {
+	private void printReport(FoundElements aFoundElements, String aTargetFileName, List<String> aIgnoreFiles) throws IOException {
 		File tempDir = new File(getOutputDirectory());
 		tempDir.mkdirs();
 		File tempIndexFile = new File(tempDir.getAbsolutePath() + '/' + aTargetFileName);
