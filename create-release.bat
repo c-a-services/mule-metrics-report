@@ -5,6 +5,12 @@ call mvn build-helper:parse-version release:prepare release:perform -Ddevelopmen
 if errorlevel 1 goto ende
 
 rem call mvn nexus-staging:release
+
+echo.
+echo.
+echo Next step:
+echo.
 echo Close and Release Repository at https://oss.sonatype.org/#stagingRepositories
+echo.
 
 :ende
