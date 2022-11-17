@@ -83,17 +83,13 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 		}
 		FoundElements tempFoundElements = new FoundElements();
 		File tempAppDir = new File(getMuleAppDirectory());
-		boolean tempFoundMule3Files = collectMuleFiles(tempFoundElements, tempAppDir);
-		if (tempFoundMule3Files) {
-			getLog().debug("Found files in " + tempAppDir);
-		}
+		int tempFoundMule3Files = collectMuleFiles(tempFoundElements, tempAppDir);
+		getLog().info("Found " + tempFoundMule3Files + " files in mule3: " + tempAppDir);
 		File tempMule4AppDir = new File(getMule4AppDirectory());
-		boolean tempFoundMule4Files = collectMuleFiles(tempFoundElements, tempMule4AppDir);
-		if (tempFoundMule4Files) {
-			getLog().debug("Found files in " + tempAppDir);
-		}
+		int tempFoundMule4Files = collectMuleFiles(tempFoundElements, tempMule4AppDir);
+		getLog().debug("Found " + tempFoundMule4Files + " files in mule4: " + tempAppDir);
 
-		if (tempFoundMule3Files || tempFoundMule4Files) {
+		if (tempFoundMule3Files > 0 || tempFoundMule4Files > 0) {
 			try {
 				printReport(tempFoundElements);
 			} catch (IOException e) {
@@ -309,17 +305,17 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 	 * @throws MojoExecutionException
 	 *
 	 */
-	private boolean collectMuleFiles(FoundElements aFoundElements, File aAppDir) throws MojoExecutionException {
-		boolean tempAnyFileFound = false;
+	private int collectMuleFiles(FoundElements aFoundElements, File aAppDir) throws MojoExecutionException {
+		int tempFilesFound = 0;
 		getLog().debug("Scan directory " + aAppDir);
 		File[] tempFiles = aAppDir.listFiles();
 		if (tempFiles != null) {
 			for (File tempFile : tempFiles) {
 				if (tempFile.isDirectory()) {
-					boolean tempAnyMuleFileFoundInSubDir = collectMuleFiles(aFoundElements, tempFile);
-					tempAnyFileFound = tempAnyFileFound || tempAnyMuleFileFoundInSubDir;
+					int tempFilesFoundInSubDir = collectMuleFiles(aFoundElements, tempFile);
+					tempFilesFound += tempFilesFoundInSubDir;
 				} else if (tempFile.getName().endsWith(".xml")) {
-					tempAnyFileFound = true;
+					tempFilesFound += 1;
 					getLog().debug("Found xml " + tempFile.getAbsolutePath());
 					DocumentBuilderFactory tempDbf = DocumentBuilderFactory.newInstance();
 					tempDbf.setNamespaceAware(true);
@@ -333,7 +329,7 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 				}
 			}
 		}
-		return tempAnyFileFound;
+		return tempFilesFound;
 	}
 
 	/**
