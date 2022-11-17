@@ -316,7 +316,8 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 		if (tempFiles != null) {
 			for (File tempFile : tempFiles) {
 				if (tempFile.isDirectory()) {
-					tempAnyFileFound = tempAnyFileFound || collectMuleFiles(aFoundElements, tempFile);
+					boolean tempAnyMuleFileFoundInSubDir = collectMuleFiles(aFoundElements, tempFile);
+					tempAnyFileFound = tempAnyFileFound || tempAnyMuleFileFoundInSubDir;
 				} else if (tempFile.getName().endsWith(".xml")) {
 					tempAnyFileFound = true;
 					getLog().debug("Found xml " + tempFile.getAbsolutePath());
