@@ -30,6 +30,9 @@
 		<developerConnection>scm:git:git@github.com:c-a-services/mule-metrics-report.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
+	<properties>
+        <slf4jVersion>1.7.30</slf4jVersion>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.maven</groupId>
@@ -50,6 +53,12 @@
 			<version>4.13.1</version>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4jVersion}</version>
+			<scope>provided</scope>
+        </dependency>
 	</dependencies>
 	<build>
 		<plugins>
