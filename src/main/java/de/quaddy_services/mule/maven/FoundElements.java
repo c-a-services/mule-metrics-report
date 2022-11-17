@@ -7,6 +7,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.quaddy_services.mule.maven.model.AbstractFlow;
 import de.quaddy_services.mule.maven.model.AbstractMuleXmlElement;
 import de.quaddy_services.mule.maven.model.Flow;
@@ -18,6 +21,8 @@ import de.quaddy_services.mule.maven.model.SubFlow;
  *
  */
 public class FoundElements {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(FoundElements.class);
 
 	/**
 	 *
@@ -35,6 +40,7 @@ public class FoundElements {
 	 *
 	 */
 	public void add(Flow aFlow) {
+		LOGGER.debug("Add Flow={}", aFlow);
 		flows.add(aFlow);
 		lastFoundFlow = aFlow;
 	}
@@ -45,6 +51,7 @@ public class FoundElements {
 	 *
 	 */
 	public void add(SubFlow aFlow) {
+		LOGGER.debug("Add SubFlow={}", aFlow);
 		subFlows.add(aFlow);
 		lastFoundFlow = aFlow;
 	}
@@ -55,6 +62,7 @@ public class FoundElements {
 	 *
 	 */
 	public void add(SetVariable aFlow) {
+		LOGGER.debug("Add SetVariable={}", aFlow);
 		setVariables.add(aFlow);
 	}
 
@@ -136,6 +144,13 @@ public class FoundElements {
 	 *
 	 */
 	public void add(FlowRef aFlowRef) {
+		LOGGER.debug("Add FlowRef={}", aFlowRef);
+		if (aFlowRef.getName() == null) {
+			throw new IllegalArgumentException("FlowRef " + aFlowRef + " must have a name.");
+		}
+		if (aFlowRef.getContainedInFlow() == null) {
+			throw new IllegalArgumentException("FlowRef " + aFlowRef + " must have be in a surrounding flow.");
+		}
 		flowRefs.add(aFlowRef);
 	}
 
