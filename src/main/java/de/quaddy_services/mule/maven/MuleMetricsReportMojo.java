@@ -367,7 +367,12 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 			Node tempFlowName = tempAttributes.getNamedItem("name");
 			if (tempFlowName != null) {
 				String tempFlowNameText = tempFlowName.getTextContent();
-				aFoundElements.add(new FlowRef(aParentNode, aFile, tempFlowNameText, aFoundElements.getLastFoundFlow()));
+				AbstractFlow tempLastFoundFlow = aFoundElements.getLastFoundFlow();
+				if (tempLastFoundFlow == null) {
+					getLog().info("found flow-ref " + tempFlowNameText + " outside of flow in file " + aFile);
+				} else {
+					aFoundElements.add(new FlowRef(aParentNode, aFile, tempFlowNameText, tempLastFoundFlow));
+				}
 			} else {
 				getLog().warn("Did not find attribute name in " + aChildNode.getNamespaceURI() + " " + tempLocalName + " in " + aFile);
 			}
