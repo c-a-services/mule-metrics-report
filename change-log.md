@@ -1,3 +1,5 @@
+<!-- see https://www.markdownguide.org/basic-syntax/ -->
+
 ### 2022.11.1
 
 * sub-directories are ignored #8
