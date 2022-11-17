@@ -87,7 +87,7 @@ public class MuleMetricsReportMojo extends AbstractMojo {
 		getLog().info("Found " + tempFoundMule3Files + " files in mule3: " + tempAppDir);
 		File tempMule4AppDir = new File(getMule4AppDirectory());
 		int tempFoundMule4Files = collectMuleFiles(tempFoundElements, tempMule4AppDir);
-		getLog().debug("Found " + tempFoundMule4Files + " files in mule4: " + tempAppDir);
+		getLog().info("Found " + tempFoundMule4Files + " files in mule4: " + tempAppDir);
 
 		if (tempFoundMule3Files > 0 || tempFoundMule4Files > 0) {
 			try {
