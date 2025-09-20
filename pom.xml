@@ -24,15 +24,24 @@
 		</license>
 	</licenses>
 
+	<properties>
+        <slf4jVersion>1.7.30</slf4jVersion>
+
+		<!-- https://search.maven.org/search?q=a:maven-core -->
+		<!-- https://github.com/apache/maven/releases -->
+		<version.maven-core>3.8.9</version.maven-core>
+
+		<!-- https://github.com/apache/maven-plugin-tools/releases -->
+		<version.maven-plugin-plugin>3.15.1</version.maven-plugin-plugin>
+
+	</properties>
+
 	<scm>
 		<url>https://github.com/c-a-services/mule-metrics-report</url>
 		<connection>scm:git:git@github.com:c-a-services/mule-metrics-report.git</connection>
 		<developerConnection>scm:git:git@github.com:c-a-services/mule-metrics-report.git</developerConnection>
-		<tag>HEAD</tag>
 	</scm>
-	<properties>
-        <slf4jVersion>1.7.30</slf4jVersion>
-	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.maven</groupId>
@@ -53,6 +62,12 @@
 			<version>4.13.1</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-core</artifactId>
+			<version>${version.maven-core}</version>
+			<scope>provided</scope>
+		</dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -64,8 +79,15 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-plugin-plugin</artifactId>
+				<version>${version.maven-plugin-plugin}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>3.2.1</version>
+				<!-- https://github.com/apache/maven-source-plugin/releases -->
+				<!-- https://issues.apache.org/jira/projects/MSOURCES?selectedItem=com.atlassian.jira.jira-projects-plugin:release-page&status=released -->
+				<version>3.3.1</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -78,16 +100,16 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.14.0</version>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5.3</version>
+				<version>3.0.0-M6</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
